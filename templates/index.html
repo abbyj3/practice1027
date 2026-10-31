@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World - Flask 一頁式網站</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        h1 .highlight {
+            color: var(--primary-color);
+        }
+
+        p.description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .feature-icon {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1f2937;
+        }
+
+        .feature-desc {
+            font-size: 0.85rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .interactive-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px dashed #d1d5db;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .counter-text {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <span class="badge">Python Flask 網頁應用</span>
+        <h1>Hello, <span class="highlight">World!</span> 🚀</h1>
+        <p class="description">
+            歡迎來到你的第一個 Python Flask 一頁式網站！<br>
+            這是一個以簡約、高效、現代風格設計的單頁 Web 應用程式。
+        </p>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">極簡輕量</div>
+                <div class="feature-desc">使用微型框架 Flask，快速啟動、低負載。</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">現代美觀</div>
+                <div class="feature-desc">響應式自適應設計，支援各類螢幕與裝置。</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧩</div>
+                <div class="feature-title">易於擴充</div>
+                <div class="feature-desc">清楚的路由與模組架構，方便後續加入更多功能。</div>
+            </div>
+        </div>
+
+        <div class="interactive-section">
+            <button type="button" class="btn" id="clickBtn" onclick="handleClick()">點擊互動 🎉</button>
+            <p class="counter-text" id="counterText" aria-live="polite">你已經點擊了 <strong>0</strong> 次</p>
+        </div>
+
+        <footer>
+            建置環境：Python + Flask &bull; 本機伺服器運作中
+        </footer>
+    </main>
+
+    <script>
+        let count = 0;
+        function handleClick() {
+            count++;
+            document.getElementById('counterText').innerHTML = `你已經點擊了 <strong>${count}</strong> 次！乾杯 🥂`;
+        }
+    </script>
+</body>
+</html>
