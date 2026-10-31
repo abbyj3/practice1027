@@ -12,8 +12,13 @@ practice1027/
 ├── app.py               # Flask 後端應用主程式
 ├── requirements.txt     # 依賴套件清單 (Flask)
 ├── run.bat              # Windows 快速啟動腳本
+├── push.bat             # 一鍵推送到 GitHub 腳本
 └── README.md            # 專案說明文件
 ```
+
+## GitHub 儲存庫
+- **遠端倉庫**：`https://github.com/abbyj3/practice1027`
+- **推送方式**：雙擊 `push.bat` 或在終端機輸入 `git push -u origin main`
 
 ## 快速啟動方法
 
