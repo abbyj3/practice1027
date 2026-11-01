@@ -1,0 +1,69 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # CI: 持續整合（語法檢查與單元測試）
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Syntax & Compilation Check
+        run: |
+          python -m compileall .
+
+      - name: Run Unit Tests
+        run: |
+          python -m unittest discover -s tests
+
+  # CD: 持續部署（測試通過且為 main 分支時觸發 Render 部署）
+  deploy:
+    name: Deploy to Render
+    needs: test
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render Deploy Hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "::error::未設定 RENDER_DEPLOY_HOOK_URL 密鑰！請至 GitHub 儲存庫的 Settings -> Secrets and variables -> Actions 新增此 Secret。"
+            exit 1
+          fi
+
+          echo "🚀 正在觸發 Render 自動部署..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$RENDER_DEPLOY_HOOK_URL")
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Render API 回應碼: $HTTP_STATUS"
+          echo "Render API 回應內容: $BODY"
+
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "✅ Render 部署指令已成功送出！"
+          else
+            echo "::error::Render Deploy Hook 觸發失敗，HTTP 狀態碼為 $HTTP_STATUS"
+            exit 1
+          fi
